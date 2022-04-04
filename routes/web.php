@@ -14,12 +14,12 @@ use App\Http\Controllers\UsuariosController;
 |
 */
 
-Route::get('/', function () {
-    return view('modules.login');
-});
+Route::get('/', function () {return view('modules.login');});
 
 Auth::routes();
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/profile', [UsuariosController::class, 'userProfile']);
+Route::put('/profile', [UsuariosController::class, 'dataUpdate']);
+
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

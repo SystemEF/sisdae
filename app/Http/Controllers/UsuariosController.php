@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuarios;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
+
+
 
 class UsuariosController extends Controller
 {
@@ -21,6 +27,64 @@ class UsuariosController extends Controller
     public function userProfile()
     {
         return view('modules.profile');
+    }
+
+    public function dataUpdate(Request $request)
+    {
+        var_dump($request['lastname']);
+        if(auth() -> user() -> email != request('email')){
+            if(isset($datos['passwordN'])){
+                $datos = request() -> validate([
+                    'udg_code' => ['string','max:255'],
+                    'name' => ['required','string','max:255'],
+                    'lastname' => ['string','max:255'],
+                    'email' => ['required','email','unique:users'],
+                ]);
+            }else{
+                $datos = request() -> validate([
+                    'udg_code' => ['string','max:255'],
+                    'name' => ['required','string','max:255'],
+                    'lastname' => ['string','max:255'],
+                    'email' => ['required','email','unique:users'],
+                    'passwordN' => ['required','string','min:8','max:255'],
+                ]);
+            }
+        }else{
+            if(isset($datos['passwordN'])){
+                $datos = request() -> validate([
+                    'udg_code' => ['string','max:255'],
+                    'name' => ['required','string','max:255'],
+                    'lastname' => ['string','max:255'],
+                    'email' => ['required','email','unique:users'],
+                ]);
+            }else{
+                $datos = request() -> validate([
+                    'udg_code' => ['string','max:255'],
+                    'name' => ['required','string','max:255'],
+                    'lastname' => ['string','max:255'],
+                    'email' => ['required','email','unique:users'],
+                    'passwordN' => ['required','string','min:8','max:255'],
+                ]);
+            }
+        }
+
+        if(isset($datos['passwordN'])){
+            DB::table('users')->where('id',auth() -> user() -> id)->update([
+                'udg_code' => $datos['lastname'],
+                'name' => $datos['name'],
+                'lastname' => $datos['lastname'],
+                'email' => $datos['email'],
+                'password' => Hash::make($datos['passwordN'])
+            ]);
+        }else{
+            DB::table('users')->where('id',auth() -> user() -> id)->update([
+                'udg_code' => $datos['lastname'],
+                'name' => $datos['name'],
+                'lastname' => $datos['lastname'],
+                'email' => $datos['email']
+            ]);
+        }
+        return redirect('userProfile');
     }
     
     public function index()
